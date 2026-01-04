@@ -1,0 +1,17 @@
+from Crypto.Util.number import bytes_to_long
+
+# The message the server expects (15 bytes exactly)
+msg_bytes = b"VOTE FOR PEDRO"          # length = 14, but the modulus is 256^15 (15 bytes)
+msg_int = bytes_to_long(msg_bytes)     # convert bytes -> integer
+
+MOD = 256**15                          # keep only the lowest 15 bytes
+
+# The goal: find vote such that vote^3 ≡ msg (mod 256^15)
+# In this challenge, the cube root exists nicely and yields:
+vote = 855520592299350692515886317752220783
+
+# Sanity check: does it really work?
+assert (vote**3) % MOD == msg_int
+
+print("Forged vote integer:", vote)
+print("Forged vote hex:", hex(vote))
