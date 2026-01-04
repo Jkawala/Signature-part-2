@@ -70,3 +70,4 @@ sec3 = bytes.fromhex(loads(r.recv())['secret'])
 
 flag = xor(sec1, sec2, sec3).decode()
 print(flag)
+#>>crypto{let's_decrypt_w4s_t0o_ez_do_1t_ag41n}
