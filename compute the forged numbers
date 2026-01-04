@@ -48,3 +48,5 @@ print("Server response:", response)
 # Print the flag if present
 if "flag" in response:
     print("Flag:", response["flag"])
+
+#>>> Flag: crypto{y0ur_v0t3_i5_my_v0t3}
