@@ -1,4 +1,6 @@
 from Crypto.Util.number import bytes_to_long
+from pwn import remote
+from json import dumps, loads
 
 # The message the server expects (15 bytes exactly)
 msg_bytes = b"VOTE FOR PEDRO"          # length = 14, but the modulus is 256^15 (15 bytes)
@@ -15,3 +17,34 @@ assert (vote**3) % MOD == msg_int
 
 print("Forged vote integer:", vote)
 print("Forged vote hex:", hex(vote))
+
+#part 2 
+
+HOST = "socket.cryptohack.org"
+PORT = 13375
+
+# Forged vote from part 1
+vote = 855520592299350692515886317752220783
+
+# Connect
+r = remote(HOST, PORT)
+
+# Read initial banner/message (if any)
+print(r.recvline().decode(errors="ignore").strip())
+
+# Build the request exactly how the server expects it
+request = {
+    "option": "vote",
+    "vote": hex(vote)   # server expects vote as hex string
+}
+
+# Send JSON
+r.sendline(dumps(request).encode())
+
+# Receive JSON response
+response = loads(r.recvline().decode())
+print("Server response:", response)
+
+# Print the flag if present
+if "flag" in response:
+    print("Flag:", response["flag"])
